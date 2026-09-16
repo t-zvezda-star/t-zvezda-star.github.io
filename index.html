@@ -44,12 +44,38 @@ footer .big{color:var(--ink);font-weight:700;font-size:15px;margin-bottom:6px;}
 @media(max-width:480px){.card-head{flex-direction:column;text-align:center;align-items:center;}.photo{flex-basis:auto;}.slogan{text-align:left;}}
 
 .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:24px;}
-.cta a{text-decoration:none;font-weight:800;font-size:15px;padding:14px 28px;border-radius:100px;transition:transform .15s ease, box-shadow .15s ease;}
-.cta a:hover{transform:translateY(-2px);}
+.cta button{cursor:pointer;font-family:inherit;border:none;font-weight:800;font-size:15px;padding:14px 28px;border-radius:100px;transition:transform .15s ease;}
+.cta button:hover{transform:translateY(-2px);}
 .cta .primary{background:#000;color:var(--yellow);box-shadow:0 8px 22px rgba(0,0,0,.25);}
-.cta .secondary{background:rgba(0,0,0,.08);color:#000;border:1px solid rgba(0,0,0,.22);}
-.vote-btn{display:block;text-align:center;margin-top:16px;background:#000;color:var(--yellow);text-decoration:none;font-weight:800;font-size:14px;padding:12px 14px;border-radius:12px;transition:transform .15s ease, background .15s ease;}
+.vote-btn{display:block;width:100%;text-align:center;margin-top:16px;background:#000;color:var(--yellow);border:none;cursor:pointer;font-family:inherit;font-weight:800;font-size:14px;padding:12px 14px;border-radius:12px;transition:transform .15s ease, background .15s ease;}
 .vote-btn:hover{transform:translateY(-2px);background:#141414;}
+.vote-btn.voted{background:#0B7A5B;color:#fff;cursor:default;transform:none;}
+.vote-btn.dimmed{background:#EDEDEA;color:#9a9a95;cursor:not-allowed;}
+/* modal */
+.tz-overlay{position:fixed;inset:0;background:rgba(20,20,20,.55);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px;}
+.tz-overlay.open{display:flex;}
+.tz-modal{background:#fff;border-radius:24px;max-width:640px;width:100%;max-height:88vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 40px 90px rgba(0,0,0,.3);}
+.tz-modal-head{background:var(--yellow);padding:22px 26px;display:flex;align-items:center;justify-content:space-between;}
+.tz-modal-head h3{font-size:22px;font-weight:800;letter-spacing:-.4px;}
+.tz-modal-head .sub{font-size:13px;color:#3a3320;font-weight:600;margin-top:2px;}
+.tz-close{background:#000;color:var(--yellow);border:none;width:38px;height:38px;border-radius:50%;font-size:20px;cursor:pointer;flex:0 0 38px;}
+.tz-body{padding:22px 26px;overflow-y:auto;}
+.tz-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.tz-rank{width:26px;text-align:center;font-weight:800;color:#9a9a95;font-size:14px;flex:0 0 26px;}
+.tz-rank.top{color:#000;}
+.tz-info{flex:1;min-width:0;}
+.tz-name{font-weight:700;font-size:14px;margin-bottom:5px;display:flex;justify-content:space-between;gap:8px;}
+.tz-name .cnt{color:#6B6B6B;font-weight:700;white-space:nowrap;}
+.tz-bar{height:12px;background:#F0EFEA;border-radius:8px;overflow:hidden;}
+.tz-fill{height:100%;background:var(--yellow);border-radius:8px;transition:width .5s cubic-bezier(.5,.05,.2,1);min-width:2px;}
+.tz-row.top .tz-fill{background:linear-gradient(90deg,#FFDD2D,#F5B800);}
+.tz-total{text-align:center;font-size:13px;color:#6B6B6B;margin-top:6px;}
+.tz-foot{padding:14px 26px 20px;display:flex;gap:10px;justify-content:center;border-top:1px solid #f0f0f0;}
+.tz-foot button{cursor:pointer;font-family:inherit;font-weight:700;font-size:14px;padding:10px 18px;border-radius:100px;border:1px solid #e0e0e0;background:#fff;}
+.tz-foot .refresh{background:#000;color:var(--yellow);border:none;}
+.tz-empty{text-align:center;color:#9a9a95;padding:24px;}
+.tz-toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:#0B7A5B;color:#fff;font-weight:700;padding:14px 22px;border-radius:100px;box-shadow:0 12px 30px rgba(0,0,0,.25);opacity:0;transition:all .3s ease;z-index:1100;pointer-events:none;}
+.tz-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 </style>
 </head>
 <body>
@@ -65,10 +91,7 @@ footer .big{color:var(--ink);font-weight:700;font-size:15px;margin-bottom:6px;}
       <span class="pill">Т-Банк · внутренний конкурс</span>
     </div>
   
-    <div class="cta">
-      <a class="primary" href="https://docs.google.com/forms/d/e/1FAIpQLSebT3IHf7AR79xAZQfgGdTrVkwaylXqyKqqIXF3dl6kcYGmeg/viewform" target="_blank" rel="noopener">★ Проголосовать</a>
-      <a class="secondary" href="https://docs.google.com/forms/d/e/1FAIpQLSebT3IHf7AR79xAZQfgGdTrVkwaylXqyKqqIXF3dl6kcYGmeg/viewanalytics" target="_blank" rel="noopener">📊 Рейтинг голосов</a>
-    </div>
+    <div class="cta"><button type="button" class="primary" onclick="tzOpenRating()">📊 Рейтинг голосов</button></div>
   </div>
 </header>
 <div class="wrap">
@@ -94,7 +117,7 @@ footer .big{color:var(--ink);font-weight:700;font-size:15px;margin-bottom:6px;}
         <p>Нужно понять, почему проседает выдача, падает одобрение, возникают повторяющиеся ошибки агентов или где именно ломается процесс.</p>
       </div>
     
-        <a class="vote-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSebT3IHf7AR79xAZQfgGdTrVkwaylXqyKqqIXF3dl6kcYGmeg/viewform?usp=pp_url&entry.1279463197=%D0%A0%D0%B0%D1%81%D1%81%D1%80%D0%BE%D1%87%D0%BA%D0%B0%20360%20%E2%80%94%20%D0%9B%D0%B5%D0%BD%D0%B0%20%D0%9D%D0%BE%D0%B2%D0%B8%D0%BA%D0%BE%D0%B2%D0%B0" target="_blank" rel="noopener">★ Голосовать за «Рассрочка 360»</a>
+        <button type="button" class="vote-btn" data-opt="Рассрочка 360 — Лена Новикова" data-nick="Рассрочка 360" data-idx="0" onclick="tzVote(this)">★ Голосовать за «Рассрочка 360»</button>
       </article>
 
     <article class="card">
@@ -117,7 +140,7 @@ footer .big{color:var(--ink);font-weight:700;font-size:15px;margin-bottom:6px;}
         <p>Нужно разобраться в отчётах или B2B, корректно зафиксировать информацию либо понять, как выстроить рабочую коммуникацию со сложным партнёром.</p>
       </div>
     
-        <a class="vote-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSebT3IHf7AR79xAZQfgGdTrVkwaylXqyKqqIXF3dl6kcYGmeg/viewform?usp=pp_url&entry.1279463197=B2B-%D0%9D%D0%B0%D0%B2%D0%B8%D0%B3%D0%B0%D1%82%D0%BE%D1%80%20%E2%80%94%20%D0%9B%D0%B5%D1%80%D0%B0%20%D0%A1%D0%BF%D0%B0%D1%81%D0%BE%D0%B2%D0%B0" target="_blank" rel="noopener">★ Голосовать за «B2B-Навигатор»</a>
+        <button type="button" class="vote-btn" data-opt="B2B-Навигатор — Лера Спасова" data-nick="B2B-Навигатор" data-idx="1" onclick="tzVote(this)">★ Голосовать за «B2B-Навигатор»</button>
       </article>
 
     <article class="card">
@@ -140,7 +163,7 @@ footer .big{color:var(--ink);font-weight:700;font-size:15px;margin-bottom:6px;}
         <p>Нужно выстроить контакт с партнёром, усилить доверие, адаптироваться к изменившейся ситуации и сохранить устойчивую рабочую связь.</p>
       </div>
     
-        <a class="vote-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSebT3IHf7AR79xAZQfgGdTrVkwaylXqyKqqIXF3dl6kcYGmeg/viewform?usp=pp_url&entry.1279463197=MISS%20TFitness%20%E2%80%94%20%D0%AE%D0%BB%D1%8F%20%D0%9A%D0%B2%D0%B0%D1%80%D1%82%D0%B0" target="_blank" rel="noopener">★ Голосовать за «MISS TFitness»</a>
+        <button type="button" class="vote-btn" data-opt="MISS TFitness — Юля Кварта" data-nick="MISS TFitness" data-idx="2" onclick="tzVote(this)">★ Голосовать за «MISS TFitness»</button>
       </article>
 
     <article class="card">
@@ -163,7 +186,7 @@ footer .big{color:var(--ink);font-weight:700;font-size:15px;margin-bottom:6px;}
         <p>Нужна сильная переговорная позиция, решение win-win, аргументация через цифры или понятная стратегия роста Т-Банка внутри партнёра.</p>
       </div>
     
-        <a class="vote-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSebT3IHf7AR79xAZQfgGdTrVkwaylXqyKqqIXF3dl6kcYGmeg/viewform?usp=pp_url&entry.1279463197=%D0%90%D1%80%D1%85%D0%B8%D1%82%D0%B5%D0%BA%D1%82%D0%BE%D1%80%20Win-Win%20%E2%80%94%20%D0%9B%D0%B5%D0%BD%D0%B0%20%D0%A1%D0%B0%D0%B2%D0%B8%D0%BD%D0%BE%D0%B2%D0%B0" target="_blank" rel="noopener">★ Голосовать за «Архитектор Win-Win»</a>
+        <button type="button" class="vote-btn" data-opt="Архитектор Win-Win — Лена Савинова" data-nick="Архитектор Win-Win" data-idx="3" onclick="tzVote(this)">★ Голосовать за «Архитектор Win-Win»</button>
       </article>
 
     <article class="card">
@@ -186,7 +209,7 @@ footer .big{color:var(--ink);font-weight:700;font-size:15px;margin-bottom:6px;}
         <p>Непонятно, в чём проблема, кого внутри банка нужно подключить и как быстрее всего прийти к рабочему решению.</p>
       </div>
     
-        <a class="vote-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSebT3IHf7AR79xAZQfgGdTrVkwaylXqyKqqIXF3dl6kcYGmeg/viewform?usp=pp_url&entry.1279463197=%D0%91%D0%B0%D0%BD%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B8%D0%B9%20%D0%B4%D0%B8%D0%B0%D0%B3%D0%BD%D0%BE%D1%81%D1%82%20%E2%80%94%20%D0%9D%D0%B0%D1%82%D0%B0%D1%88%D0%B0%20%D0%A1%D0%B0%D0%B2%D0%B8%D0%BD%D0%B0" target="_blank" rel="noopener">★ Голосовать за «Банковский диагност»</a>
+        <button type="button" class="vote-btn" data-opt="Банковский диагност — Наташа Савина" data-nick="Банковский диагност" data-idx="4" onclick="tzVote(this)">★ Голосовать за «Банковский диагност»</button>
       </article>
 
     <article class="card">
@@ -209,7 +232,7 @@ footer .big{color:var(--ink);font-weight:700;font-size:15px;margin-bottom:6px;}
         <p>Нужно найти точки роста, собрать понятную систему работы, адаптировать тактику под партнёра или помочь сотруднику быстрее вырасти.</p>
       </div>
     
-        <a class="vote-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSebT3IHf7AR79xAZQfgGdTrVkwaylXqyKqqIXF3dl6kcYGmeg/viewform?usp=pp_url&entry.1279463197=Lady%20Synergy%20%E2%80%94%20%D0%9B%D0%B5%D0%BD%D0%B0%20%D0%93%D0%B2%D0%BE%D0%B7%D0%B4%D0%B5%D0%B2%D0%B0" target="_blank" rel="noopener">★ Голосовать за «Lady Synergy»</a>
+        <button type="button" class="vote-btn" data-opt="Lady Synergy — Лена Гвоздева" data-nick="Lady Synergy" data-idx="5" onclick="tzVote(this)">★ Голосовать за «Lady Synergy»</button>
       </article>
 
     <article class="card">
@@ -232,7 +255,7 @@ footer .big{color:var(--ink);font-weight:700;font-size:15px;margin-bottom:6px;}
         <p>Нужно собрать вокруг задачи несколько команд, разобраться в метриках, договориться с партнёром и довести инициативу до реального бизнес-результата.</p>
       </div>
     
-        <a class="vote-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSebT3IHf7AR79xAZQfgGdTrVkwaylXqyKqqIXF3dl6kcYGmeg/viewform?usp=pp_url&entry.1279463197=T_SalesUp%20%E2%80%94%20%D0%9D%D0%B0%D1%82%D0%B0%D1%88%D0%B0%20%D0%A3%D0%BB%D0%B0%D0%BD%D0%BE%D0%B2%D0%B0" target="_blank" rel="noopener">★ Голосовать за «T_SalesUp»</a>
+        <button type="button" class="vote-btn" data-opt="T_SalesUp — Наташа Уланова" data-nick="T_SalesUp" data-idx="6" onclick="tzVote(this)">★ Голосовать за «T_SalesUp»</button>
       </article>
 
     <article class="card">
@@ -255,7 +278,7 @@ footer .big{color:var(--ink);font-weight:700;font-size:15px;margin-bottom:6px;}
         <p>Нужно быстро разобраться в процессе или данных, найти нужную информацию, решить проблемный кейс, протестировать новое или получить надёжную экспертную поддержку.</p>
       </div>
     
-        <a class="vote-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSebT3IHf7AR79xAZQfgGdTrVkwaylXqyKqqIXF3dl6kcYGmeg/viewform?usp=pp_url&entry.1279463197=%D0%9C%D0%B0%D0%B3%D0%B8%D1%81%D1%82%D1%80%20%D0%B7%D0%BD%D0%B0%D0%BD%D0%B8%D0%B9%20%E2%80%94%20%D0%AE%D0%BB%D1%8F%20%D0%A7%D0%B5%D1%80%D0%BD%D0%B8%D0%B9" target="_blank" rel="noopener">★ Голосовать за «Магистр знаний»</a>
+        <button type="button" class="vote-btn" data-opt="Магистр знаний — Юля Черний" data-nick="Магистр знаний" data-idx="7" onclick="tzVote(this)">★ Голосовать за «Магистр знаний»</button>
       </article>
 
     <article class="card">
@@ -278,7 +301,7 @@ footer .big{color:var(--ink);font-weight:700;font-size:15px;margin-bottom:6px;}
         <p>Нужно оживить сложный кейс, вернуть партнёра, разобрать отказ, связать несколько команд или подготовить несколько сценариев решения.</p>
       </div>
     
-        <a class="vote-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSebT3IHf7AR79xAZQfgGdTrVkwaylXqyKqqIXF3dl6kcYGmeg/viewform?usp=pp_url&entry.1279463197=%D0%92%D0%BE%D1%80%D1%87%D1%83%D0%BD%20%E2%80%94%20%D0%9D%D0%B8%D0%BA%D0%B8%D1%82%D0%B0%20%D0%9B%D0%B5%D1%81%D0%BD%D0%B8%D0%BA%D0%BE%D0%B2" target="_blank" rel="noopener">★ Голосовать за «Ворчун»</a>
+        <button type="button" class="vote-btn" data-opt="Ворчун — Никита Лесников" data-nick="Ворчун" data-idx="8" onclick="tzVote(this)">★ Голосовать за «Ворчун»</button>
       </article>
 
     <article class="card">
@@ -301,7 +324,7 @@ footer .big{color:var(--ink);font-weight:700;font-size:15px;margin-bottom:6px;}
         <p>Нужно подобрать сильное решение под партнёра, разобрать его метрики, подготовиться к серьёзным переговорам или быстро освоить новый инструмент.</p>
       </div>
     
-        <a class="vote-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSebT3IHf7AR79xAZQfgGdTrVkwaylXqyKqqIXF3dl6kcYGmeg/viewform?usp=pp_url&entry.1279463197=GSMQueen%20%E2%80%94%20%D0%96%D0%B5%D0%BD%D1%8F%20%D0%97%D0%B2%D0%B5%D1%80%D0%B5%D0%B2%D0%B0" target="_blank" rel="noopener">★ Голосовать за «GSMQueen»</a>
+        <button type="button" class="vote-btn" data-opt="GSMQueen — Женя Зверева" data-nick="GSMQueen" data-idx="9" onclick="tzVote(this)">★ Голосовать за «GSMQueen»</button>
       </article>
 
     <article class="card">
@@ -324,7 +347,7 @@ footer .big{color:var(--ink);font-weight:700;font-size:15px;margin-bottom:6px;}
         <p>Партнёр говорит «дорого», переговоры заходят в тупик или нужно спокойно разобрать возражение и перевести разговор с цены на ценность.</p>
       </div>
     
-        <a class="vote-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSebT3IHf7AR79xAZQfgGdTrVkwaylXqyKqqIXF3dl6kcYGmeg/viewform?usp=pp_url&entry.1279463197=Pavel_WinWin%20%E2%80%94%20%D0%9F%D0%B0%D1%88%D0%B0%20%D0%A8%D1%83%D0%BB%D1%8C%D0%B3%D0%B0" target="_blank" rel="noopener">★ Голосовать за «Pavel_WinWin»</a>
+        <button type="button" class="vote-btn" data-opt="Pavel_WinWin — Паша Шульга" data-nick="Pavel_WinWin" data-idx="10" onclick="tzVote(this)">★ Голосовать за «Pavel_WinWin»</button>
       </article>
 
     <article class="card">
@@ -347,7 +370,7 @@ footer .big{color:var(--ink);font-weight:700;font-size:15px;margin-bottom:6px;}
         <p>Нужен свежий взгляд, помощь в сложной ситуации, совместный разбор задачи или человек, который не бросит вопрос на полпути.</p>
       </div>
     
-        <a class="vote-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSebT3IHf7AR79xAZQfgGdTrVkwaylXqyKqqIXF3dl6kcYGmeg/viewform?usp=pp_url&entry.1279463197=VictoryStar%20%E2%80%94%20%D0%92%D0%B8%D0%BA%D0%B0%20%D0%95%D0%BF%D0%B8%D1%84%D0%B0%D0%BD%D0%BE%D0%B2%D0%B0" target="_blank" rel="noopener">★ Голосовать за «VictoryStar»</a>
+        <button type="button" class="vote-btn" data-opt="VictoryStar — Вика Епифанова" data-nick="VictoryStar" data-idx="11" onclick="tzVote(this)">★ Голосовать за «VictoryStar»</button>
       </article>
 
     <article class="card">
@@ -370,7 +393,7 @@ footer .big{color:var(--ink);font-weight:700;font-size:15px;margin-bottom:6px;}
         <p>Нужно прокачать аккаунтинг, разобраться в CRM или данных, посмотреть на развитие партнёра свежим взглядом либо получить поддержку в работе с людьми.</p>
       </div>
     
-        <a class="vote-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSebT3IHf7AR79xAZQfgGdTrVkwaylXqyKqqIXF3dl6kcYGmeg/viewform?usp=pp_url&entry.1279463197=Account%20Mentor%20%E2%80%94%20%D0%98%D1%80%D0%B8%D0%BD%D0%B0%20%D0%A0%D1%83%D0%B4%D0%B5%D0%BD%D0%BA%D0%BE" target="_blank" rel="noopener">★ Голосовать за «Account Mentor»</a>
+        <button type="button" class="vote-btn" data-opt="Account Mentor — Ирина Руденко" data-nick="Account Mentor" data-idx="12" onclick="tzVote(this)">★ Голосовать за «Account Mentor»</button>
       </article>
 
     <article class="card">
@@ -393,7 +416,7 @@ footer .big{color:var(--ink);font-weight:700;font-size:15px;margin-bottom:6px;}
         <p>Нужно почувствовать настроение партнёра, подобрать правильный тон, найти индивидуальное решение или объяснить сложный вопрос так, чтобы он стал понятным.</p>
       </div>
     
-        <a class="vote-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSebT3IHf7AR79xAZQfgGdTrVkwaylXqyKqqIXF3dl6kcYGmeg/viewform?usp=pp_url&entry.1279463197=Partner%20Radar%20%E2%80%94%20%D0%9E%D0%BB%D1%8F%20%D0%95%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B0" target="_blank" rel="noopener">★ Голосовать за «Partner Radar»</a>
+        <button type="button" class="vote-btn" data-opt="Partner Radar — Оля Егорова" data-nick="Partner Radar" data-idx="13" onclick="tzVote(this)">★ Голосовать за «Partner Radar»</button>
       </article>
   </section>
   <footer>
@@ -401,5 +424,90 @@ footer .big{color:var(--ink);font-weight:700;font-size:15px;margin-bottom:6px;}
     <div>Предвыборный ознакомительный материал · Т-Банк</div>
   </footer>
 </div>
+
+<!-- silent Google Form submit -->
+<iframe name="tzSink" style="display:none" title="sink"></iframe>
+<form id="tzForm" action="https://docs.google.com/forms/d/e/1FAIpQLSebT3IHf7AR79xAZQfgGdTrVkwaylXqyKqqIXF3dl6kcYGmeg/formResponse" method="POST" target="tzSink" style="display:none">
+  <input type="text" name="entry.1279463197" id="tzEntry">
+</form>
+<!-- rating modal -->
+<div class="tz-overlay" id="tzOverlay" onclick="if(event.target===this)tzCloseRating()">
+  <div class="tz-modal">
+    <div class="tz-modal-head">
+      <div><h3>★ Рейтинг Т-звезды</h3><div class="sub" id="tzSub">Загрузка…</div></div>
+      <button class="tz-close" onclick="tzCloseRating()">×</button>
+    </div>
+    <div class="tz-body" id="tzBody"><div class="tz-empty">Загрузка…</div></div>
+    <div class="tz-foot"><button class="refresh" onclick="tzLoadRating()">↻ Обновить</button><button onclick="tzCloseRating()">Закрыть</button></div>
+  </div>
+</div>
+<div class="tz-toast" id="tzToast"></div>
+<script>
+var TZ_CANDS = [{"nick": "Рассрочка 360", "name": "Лена Новикова", "opt": "Рассрочка 360 — Лена Новикова"}, {"nick": "B2B-Навигатор", "name": "Лера Спасова", "opt": "B2B-Навигатор — Лера Спасова"}, {"nick": "MISS TFitness", "name": "Юля Кварта", "opt": "MISS TFitness — Юля Кварта"}, {"nick": "Архитектор Win-Win", "name": "Лена Савинова", "opt": "Архитектор Win-Win — Лена Савинова"}, {"nick": "Банковский диагност", "name": "Наташа Савина", "opt": "Банковский диагност — Наташа Савина"}, {"nick": "Lady Synergy", "name": "Лена Гвоздева", "opt": "Lady Synergy — Лена Гвоздева"}, {"nick": "T_SalesUp", "name": "Наташа Уланова", "opt": "T_SalesUp — Наташа Уланова"}, {"nick": "Магистр знаний", "name": "Юля Черний", "opt": "Магистр знаний — Юля Черний"}, {"nick": "Ворчун", "name": "Никита Лесников", "opt": "Ворчун — Никита Лесников"}, {"nick": "GSMQueen", "name": "Женя Зверева", "opt": "GSMQueen — Женя Зверева"}, {"nick": "Pavel_WinWin", "name": "Паша Шульга", "opt": "Pavel_WinWin — Паша Шульга"}, {"nick": "VictoryStar", "name": "Вика Епифанова", "opt": "VictoryStar — Вика Епифанова"}, {"nick": "Account Mentor", "name": "Ирина Руденко", "opt": "Account Mentor — Ирина Руденко"}, {"nick": "Partner Radar", "name": "Оля Егорова", "opt": "Partner Radar — Оля Егорова"}];
+var TZ_CSV = "https://docs.google.com/spreadsheets/d/14GLMp6AVDXldG6uOp6_95-lHTAUmkUUENN7O-P4yf6U/gviz/tq?tqx=out:csv&gid=2040114737";
+var TZ_KEY = "tzvezda_voted_v1";
+
+function tzVote(btn){
+  if(localStorage.getItem(TZ_KEY)){ tzToast("Вы уже проголосовали"); return; }
+  var opt = btn.getAttribute('data-opt');
+  var nick = btn.getAttribute('data-nick');
+  document.getElementById('tzEntry').value = opt;
+  document.getElementById('tzForm').submit();
+  try{ localStorage.setItem(TZ_KEY, opt); }catch(e){}
+  tzMarkVoted(opt);
+  tzToast("✓ Голос за «"+nick+"» учтён");
+}
+function tzMarkVoted(opt){
+  document.querySelectorAll('.vote-btn').forEach(function(b){
+    if(b.getAttribute('data-opt')===opt){ b.classList.add('voted'); b.textContent="✓ Ваш голос"; }
+    else{ b.classList.add('dimmed'); b.disabled=true; }
+  });
+}
+function tzToast(msg){
+  var t=document.getElementById('tzToast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(window.__tzT); window.__tzT=setTimeout(function(){t.classList.remove('show');},2600);
+}
+function tzParseCSV(text){
+  var rows=[],row=[],cur="",q=false;
+  for(var i=0;i<text.length;i++){var c=text[i];
+    if(q){ if(c=='"'){ if(text[i+1]=='"'){cur+='"';i++;} else q=false; } else cur+=c; }
+    else{ if(c=='"')q=true; else if(c==','){row.push(cur);cur="";} else if(c=='\n'){row.push(cur);rows.push(row);row=[];cur="";} else if(c!='\r')cur+=c; }
+  }
+  if(cur.length||row.length){row.push(cur);rows.push(row);}
+  return rows;
+}
+function tzOpenRating(){ document.getElementById('tzOverlay').classList.add('open'); tzLoadRating(); }
+function tzCloseRating(){ document.getElementById('tzOverlay').classList.remove('open'); }
+function tzLoadRating(){
+  var body=document.getElementById('tzBody'); var sub=document.getElementById('tzSub');
+  sub.textContent="Обновление…";
+  fetch(TZ_CSV+"&_="+Date.now()).then(function(r){return r.text();}).then(function(t){
+    var rows=tzParseCSV(t); var counts={}; var total=0;
+    TZ_CANDS.forEach(function(c){counts[c.opt]=0;});
+    for(var i=1;i<rows.length;i++){ var v=(rows[i][1]||"").trim(); if(v){ if(counts[v]===undefined)counts[v]=0; counts[v]++; total++; } }
+    var arr=TZ_CANDS.map(function(c){return {nick:c.nick,name:c.name,c:counts[c.opt]||0};});
+    arr.sort(function(a,b){return b.c-a.c;});
+    var max=Math.max(1,arr[0].c);
+    var html="";
+    arr.forEach(function(x,i){
+      var pct= total? Math.round(x.c/total*100):0;
+      var w= Math.round(x.c/max*100);
+      var top=(i===0 && x.c>0)?" top":"";
+      html+='<div class="tz-row'+top+'"><div class="tz-rank'+top+'">'+(i+1)+'</div><div class="tz-info">'+
+        '<div class="tz-name"><span>'+tzEsc(x.nick)+' · '+tzEsc(x.name)+'</span><span class="cnt">'+x.c+' ('+pct+'%)</span></div>'+
+        '<div class="tz-bar"><div class="tz-fill" style="width:'+w+'%"></div></div></div></div>';
+    });
+    body.innerHTML=html;
+    sub.textContent="Всего голосов: "+total;
+  }).catch(function(e){
+    body.innerHTML='<div class="tz-empty">Не удалось загрузить рейтинг. Попробуйте позже.</div>';
+    sub.textContent="";
+  });
+}
+function tzEsc(s){return (s||"").replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+// restore voted state
+(function(){ var v=localStorage.getItem(TZ_KEY); if(v) tzMarkVoted(v); })();
+</script>
+
 </body>
 </html>
