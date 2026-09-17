@@ -47,7 +47,13 @@ footer .big{color:var(--ink);font-weight:700;font-size:15px;margin-bottom:6px;}
 .cta button{cursor:pointer;font-family:inherit;border:none;font-weight:800;font-size:15px;padding:14px 28px;border-radius:100px;transition:transform .15s ease;}
 .cta button:hover{transform:translateY(-2px);}
 .cta .primary{background:#000;color:var(--yellow);box-shadow:0 8px 22px rgba(0,0,0,.25);}
-.cta-note{text-align:center;margin-top:14px;font-size:13px;font-weight:700;color:#3a3320;}
+.cta-prize{text-align:center;margin:20px auto 0;max-width:620px;background:#000;color:var(--yellow);font-size:14px;font-weight:800;padding:12px 20px;border-radius:14px;}
+.cta-note{text-align:center;margin-top:12px;font-size:13px;font-weight:700;color:#3a3320;}
+.tz-note{background:#FFF9DB;border:1px solid #F2E39A;border-radius:12px;padding:11px 14px;font-size:13px;font-weight:700;color:#8a6d0a;margin-bottom:16px;text-align:center;}
+.tz-pass{display:inline-block;background:#0B7A5B;color:#fff;font-size:10px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:2px 7px;border-radius:6px;margin-left:8px;vertical-align:middle;}
+.tz-row.pass .tz-name>span:first-child{color:#0B7A5B;}
+.tz-cut{border:none;border-top:2px dashed #d9d4c2;margin:6px 0 16px;position:relative;}
+.tz-cut span{position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:#fff;padding:0 10px;font-size:11px;font-weight:800;color:#9a9a95;text-transform:uppercase;letter-spacing:.5px;}
 .vote-btn{display:block;width:100%;text-align:center;margin-top:16px;background:#000;color:var(--yellow);border:none;cursor:pointer;font-family:inherit;font-weight:800;font-size:14px;padding:12px 14px;border-radius:12px;transition:transform .15s ease, background .15s ease;}
 .vote-btn:hover{transform:translateY(-2px);background:#141414;}
 .vote-btn.voted{background:#0B7A5B;color:#fff;cursor:default;transform:none;}
@@ -93,6 +99,7 @@ footer .big{color:var(--ink);font-weight:700;font-size:15px;margin-bottom:6px;}
     </div>
   
     <div class="cta"><button type="button" class="primary" onclick="tzOpenRating()">📊 Рейтинг голосов</button></div>
+    <div class="cta-prize">🏆 По итогам голосования звание «Т-звезда» получат 4 кандидата с наибольшим числом голосов</div>
     <div class="cta-note">★ Голосовать можно только за одного кандидата — выбор нельзя изменить</div>
   </div>
 </header>
@@ -490,14 +497,18 @@ function tzLoadRating(){
     var arr=TZ_CANDS.map(function(c){return {nick:c.nick,name:c.name,c:counts[c.opt]||0};});
     arr.sort(function(a,b){return b.c-a.c;});
     var max=Math.max(1,arr[0].c);
-    var html="";
+    var WIN=4;
+    var html='<div class="tz-note">🏆 Звание «Т-звезда» получат 4 кандидата с наибольшим числом голосов</div>';
     arr.forEach(function(x,i){
       var pct= total? Math.round(x.c/total*100):0;
       var w= Math.round(x.c/max*100);
-      var top=(i===0 && x.c>0)?" top":"";
-      html+='<div class="tz-row'+top+'"><div class="tz-rank'+top+'">'+(i+1)+'</div><div class="tz-info">'+
-        '<div class="tz-name"><span>'+tzEsc(x.nick)+' · '+tzEsc(x.name)+'</span><span class="cnt">'+x.c+' ('+pct+'%)</span></div>'+
+      var pass=(i<WIN && x.c>0);
+      var cls=(i===0 && x.c>0)?" top":""; if(pass) cls+=" pass";
+      var badge= pass? '<span class="tz-pass">★ Т-звезда</span>':'';
+      html+='<div class="tz-row'+cls+'"><div class="tz-rank'+(i===0&&x.c>0?' top':'')+'">'+(i+1)+'</div><div class="tz-info">'+
+        '<div class="tz-name"><span>'+tzEsc(x.nick)+' · '+tzEsc(x.name)+badge+'</span><span class="cnt">'+x.c+' ('+pct+'%)</span></div>'+
         '<div class="tz-bar"><div class="tz-fill" style="width:'+w+'%"></div></div></div></div>';
+      if(i===WIN-1 && i<arr.length-1){ html+='<div class="tz-cut"><span>порог · топ-4</span></div>'; }
     });
     body.innerHTML=html;
     sub.textContent="Всего голосов: "+total;
