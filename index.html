@@ -47,6 +47,7 @@ footer .big{color:var(--ink);font-weight:700;font-size:15px;margin-bottom:6px;}
 .cta button{cursor:pointer;font-family:inherit;border:none;font-weight:800;font-size:15px;padding:14px 28px;border-radius:100px;transition:transform .15s ease;}
 .cta button:hover{transform:translateY(-2px);}
 .cta .primary{background:#000;color:var(--yellow);box-shadow:0 8px 22px rgba(0,0,0,.25);}
+.cta .reset{background:rgba(0,0,0,.08);color:#000;border:1px solid rgba(0,0,0,.2);font-size:14px;padding:12px 20px;}
 .vote-btn{display:block;width:100%;text-align:center;margin-top:16px;background:#000;color:var(--yellow);border:none;cursor:pointer;font-family:inherit;font-weight:800;font-size:14px;padding:12px 14px;border-radius:12px;transition:transform .15s ease, background .15s ease;}
 .vote-btn:hover{transform:translateY(-2px);background:#141414;}
 .vote-btn.voted{background:#0B7A5B;color:#fff;cursor:default;transform:none;}
@@ -91,7 +92,7 @@ footer .big{color:var(--ink);font-weight:700;font-size:15px;margin-bottom:6px;}
       <span class="pill">Т-Банк · внутренний конкурс</span>
     </div>
   
-    <div class="cta"><button type="button" class="primary" onclick="tzOpenRating()">📊 Рейтинг голосов</button></div>
+    <div class="cta"><button type="button" class="primary" onclick="tzOpenRating()">📊 Рейтинг голосов</button><button type="button" id="tzReset" class="reset" style="display:none" onclick="tzReset()">↻ Проголосовать заново</button></div>
   </div>
 </header>
 <div class="wrap">
@@ -445,7 +446,7 @@ footer .big{color:var(--ink);font-weight:700;font-size:15px;margin-bottom:6px;}
 <script>
 var TZ_CANDS = [{"nick": "Рассрочка 360", "name": "Лена Новикова", "opt": "Рассрочка 360 — Лена Новикова"}, {"nick": "B2B-Навигатор", "name": "Лера Спасова", "opt": "B2B-Навигатор — Лера Спасова"}, {"nick": "MISS TFitness", "name": "Юля Кварта", "opt": "MISS TFitness — Юля Кварта"}, {"nick": "Архитектор Win-Win", "name": "Лена Савинова", "opt": "Архитектор Win-Win — Лена Савинова"}, {"nick": "Банковский диагност", "name": "Наташа Савина", "opt": "Банковский диагност — Наташа Савина"}, {"nick": "Lady Synergy", "name": "Лена Гвоздева", "opt": "Lady Synergy — Лена Гвоздева"}, {"nick": "T_SalesUp", "name": "Наташа Уланова", "opt": "T_SalesUp — Наташа Уланова"}, {"nick": "Магистр знаний", "name": "Юля Черний", "opt": "Магистр знаний — Юля Черний"}, {"nick": "Ворчун", "name": "Никита Лесников", "opt": "Ворчун — Никита Лесников"}, {"nick": "GSMQueen", "name": "Женя Зверева", "opt": "GSMQueen — Женя Зверева"}, {"nick": "Pavel_WinWin", "name": "Паша Шульга", "opt": "Pavel_WinWin — Паша Шульга"}, {"nick": "VictoryStar", "name": "Вика Епифанова", "opt": "VictoryStar — Вика Епифанова"}, {"nick": "Account Mentor", "name": "Ирина Руденко", "opt": "Account Mentor — Ирина Руденко"}, {"nick": "Partner Radar", "name": "Оля Егорова", "opt": "Partner Radar — Оля Егорова"}];
 var TZ_CSV = "https://docs.google.com/spreadsheets/d/14GLMp6AVDXldG6uOp6_95-lHTAUmkUUENN7O-P4yf6U/gviz/tq?tqx=out:csv&gid=2040114737";
-var TZ_KEY = "tzvezda_voted_v1";
+var TZ_KEY = "tzvezda_voted_v2";
 
 function tzVote(btn){
   if(localStorage.getItem(TZ_KEY)){ tzToast("Вы уже проголосовали"); return; }
@@ -462,6 +463,11 @@ function tzMarkVoted(opt){
     if(b.getAttribute('data-opt')===opt){ b.classList.add('voted'); b.textContent="✓ Ваш голос"; }
     else{ b.classList.add('dimmed'); b.disabled=true; }
   });
+  var rb=document.getElementById('tzReset'); if(rb) rb.style.display='';
+}
+function tzReset(){
+  try{ localStorage.removeItem(TZ_KEY); }catch(e){}
+  location.reload();
 }
 function tzToast(msg){
   var t=document.getElementById('tzToast'); t.textContent=msg; t.classList.add('show');
