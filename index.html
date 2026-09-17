@@ -47,7 +47,7 @@ footer .big{color:var(--ink);font-weight:700;font-size:15px;margin-bottom:6px;}
 .cta button{cursor:pointer;font-family:inherit;border:none;font-weight:800;font-size:15px;padding:14px 28px;border-radius:100px;transition:transform .15s ease;}
 .cta button:hover{transform:translateY(-2px);}
 .cta .primary{background:#000;color:var(--yellow);box-shadow:0 8px 22px rgba(0,0,0,.25);}
-.cta .reset{background:rgba(0,0,0,.08);color:#000;border:1px solid rgba(0,0,0,.2);font-size:14px;padding:12px 20px;}
+.cta-note{text-align:center;margin-top:14px;font-size:13px;font-weight:700;color:#3a3320;}
 .vote-btn{display:block;width:100%;text-align:center;margin-top:16px;background:#000;color:var(--yellow);border:none;cursor:pointer;font-family:inherit;font-weight:800;font-size:14px;padding:12px 14px;border-radius:12px;transition:transform .15s ease, background .15s ease;}
 .vote-btn:hover{transform:translateY(-2px);background:#141414;}
 .vote-btn.voted{background:#0B7A5B;color:#fff;cursor:default;transform:none;}
@@ -92,7 +92,8 @@ footer .big{color:var(--ink);font-weight:700;font-size:15px;margin-bottom:6px;}
       <span class="pill">Т-Банк · внутренний конкурс</span>
     </div>
   
-    <div class="cta"><button type="button" class="primary" onclick="tzOpenRating()">📊 Рейтинг голосов</button><button type="button" id="tzReset" class="reset" style="display:none" onclick="tzReset()">↻ Проголосовать заново</button></div>
+    <div class="cta"><button type="button" class="primary" onclick="tzOpenRating()">📊 Рейтинг голосов</button></div>
+    <div class="cta-note">★ Голосовать можно только за одного кандидата — выбор нельзя изменить</div>
   </div>
 </header>
 <div class="wrap">
@@ -463,11 +464,6 @@ function tzMarkVoted(opt){
     if(b.getAttribute('data-opt')===opt){ b.classList.add('voted'); b.textContent="✓ Ваш голос"; }
     else{ b.classList.add('dimmed'); b.disabled=true; }
   });
-  var rb=document.getElementById('tzReset'); if(rb) rb.style.display='';
-}
-function tzReset(){
-  try{ localStorage.removeItem(TZ_KEY); }catch(e){}
-  location.reload();
 }
 function tzToast(msg){
   var t=document.getElementById('tzToast'); t.textContent=msg; t.classList.add('show');
